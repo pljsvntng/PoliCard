@@ -1,8 +1,22 @@
 import { useEffect, useMemo, useState } from "react";
-import { ChevronLeft, ChevronRight, Clock, CheckCircle2, XCircle, RotateCcw, Star } from "lucide-react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  Clock,
+  CheckCircle2,
+  XCircle,
+  RotateCcw,
+  Star,
+  Trophy,
+  Zap,
+  PartyPopper,
+} from "lucide-react";
 import Button from "../ui/Button";
 import Card from "../ui/Card";
+import Badge from "../ui/Badge";
 import ProgressBar from "../ui/ProgressBar";
+import QuestionDots from "./QuestionDots";
+import ScoreRing from "./ScoreRing";
 
 function normalize(str) {
   return (str || "").trim().toLowerCase();
@@ -20,6 +34,8 @@ function isCorrect(question, answer) {
   }
   return normalize(answer) === normalize(question.correctAnswer);
 }
+
+const TYPE_LABEL = { mcq: "Multiple choice", truefalse: "True or false", fillblank: "Fill in the blank", shortanswer: "Short answer" };
 
 export default function QuizPlayer({ quiz, onFinish, savedIds = new Set(), onToggleSave }) {
   const questions = quiz.questions;
@@ -52,6 +68,12 @@ export default function QuizPlayer({ quiz, onFinish, savedIds = new Set(), onTog
     return { rows, score, total };
   }, [submitted, questions, answers, total]);
 
+  const dotStates = questions.map((question) => {
+    if (submitted) return isCorrect(question, answers[question.id]) ? "correct" : "incorrect";
+    const a = answers[question.id];
+    return a !== undefined && a !== "" ? "answered" : undefined;
+  });
+
   const setAnswer = (val) => setAnswers((prev) => ({ ...prev, [q.id]: val }));
 
   const submit = () => {
@@ -63,18 +85,23 @@ export default function QuizPlayer({ quiz, onFinish, savedIds = new Set(), onTog
 
   if (!started) {
     return (
-      <Card className="p-6 max-w-lg mx-auto text-center">
+      <Card className="p-8 max-w-lg mx-auto text-center animate-pop-in">
+        <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-teal to-[#7d79ff] flex items-center justify-center mx-auto mb-4 shadow-[var(--shadow-pop)]">
+          <Trophy size={24} className="text-white" />
+        </div>
         <h2 className="font-display text-xl text-ink mb-2">{quiz.title}</h2>
-        <p className="text-sm text-slate mb-6">
-          {total} questions · {quiz.difficulty} difficulty
-        </p>
-        <div className="space-y-3 text-left mb-6">
-          <label className="flex items-center gap-2.5 text-sm text-ink cursor-pointer">
-            <input type="checkbox" className="accent-teal" checked={timerOn} onChange={(e) => setTimerOn(e.target.checked)} />
+        <div className="flex items-center justify-center gap-2 mb-6">
+          <Badge tone="teal">{total} questions</Badge>
+          <Badge tone="amber">{quiz.difficulty}</Badge>
+        </div>
+        <div className="space-y-4 text-left mb-7">
+          <label className="flex items-center gap-2.5 text-sm text-ink cursor-pointer bg-ink/[0.03] rounded-xl px-3.5 py-3">
+            <input type="checkbox" className="accent-teal w-4 h-4" checked={timerOn} onChange={(e) => setTimerOn(e.target.checked)} />
+            <Clock size={15} className="text-slate" />
             Time this attempt
           </label>
           <div>
-            <p className="text-xs text-slate mb-1.5">Answer feedback</p>
+            <p className="text-xs text-slate mb-1.5 font-medium">Answer feedback</p>
             <div className="flex gap-2">
               {[
                 ["end", "Show results at the end"],
@@ -83,8 +110,8 @@ export default function QuizPlayer({ quiz, onFinish, savedIds = new Set(), onTog
                 <button
                   key={val}
                   onClick={() => setFeedbackMode(val)}
-                  className={`text-xs rounded-md border px-3 py-2 flex-1 ${
-                    feedbackMode === val ? "border-teal bg-teal/[0.07] text-teal-deep font-medium" : "border-line text-ink"
+                  className={`press-effect text-xs rounded-xl border-2 px-3 py-2.5 flex-1 font-medium transition-colors ${
+                    feedbackMode === val ? "border-teal bg-teal/[0.08] text-teal-deep" : "border-line text-ink hover:border-line-strong"
                   }`}
                 >
                   {label}
@@ -93,7 +120,7 @@ export default function QuizPlayer({ quiz, onFinish, savedIds = new Set(), onTog
             </div>
           </div>
         </div>
-        <Button onClick={() => setStarted(true)} className="w-full">
+        <Button onClick={() => setStarted(true)} icon={Zap} size="lg" className="w-full">
           Start quiz
         </Button>
       </Card>
@@ -103,15 +130,28 @@ export default function QuizPlayer({ quiz, onFinish, savedIds = new Set(), onTog
   if (submitted) {
     const pct = Math.round((results.score / total) * 100);
     const missed = results.rows.filter((r) => !r.correct);
+    const celebrate = pct >= 80;
     return (
       <div className="max-w-2xl mx-auto space-y-6">
-        <Card className="p-6 text-center">
-          <p className="text-xs text-slate mb-1">Final score</p>
-          <p className="font-display text-4xl text-ink mb-2">
-            {results.score}/{total}
+        <Card className="p-8 text-center relative overflow-hidden animate-pop-in">
+          {celebrate && (
+            <div className="absolute -top-6 left-1/2 -translate-x-1/2 w-40 h-40 rounded-full border-4 border-moss/30 animate-celebrate-ring" />
+          )}
+          <p className="text-xs text-slate mb-3 font-medium uppercase tracking-wide flex items-center justify-center gap-1.5">
+            {celebrate && <PartyPopper size={13} className="text-amber" />}
+            Final score
           </p>
-          <p className="text-sm text-teal-deep font-medium mb-4">{pct}%</p>
-          <ProgressBar value={results.score} max={total} tone={pct >= 70 ? "moss" : "amber"} />
+          <div className="flex justify-center mb-4">
+            <ScoreRing pct={pct} />
+          </div>
+          <p className="font-display text-lg text-ink mb-5">
+            {results.score} / {total} correct
+          </p>
+          <div className="flex justify-center">
+            <Badge tone={pct >= 80 ? "moss" : pct >= 50 ? "amber" : "rose"} icon={Trophy}>
+              {pct >= 80 ? "Great work!" : pct >= 50 ? "Solid effort" : "Keep practicing"}
+            </Badge>
+          </div>
         </Card>
 
         {reviewOnly ? (
@@ -121,14 +161,14 @@ export default function QuizPlayer({ quiz, onFinish, savedIds = new Set(), onTog
             {missed.map((r) => (
               <Card key={r.question.id} className="p-4">
                 <div className="flex items-start justify-between gap-2 mb-2">
-                  <p className="text-sm text-ink">{r.question.prompt}</p>
+                  <p className="text-sm text-ink font-medium">{r.question.prompt}</p>
                   {onToggleSave && (
                     <button
                       onClick={() => onToggleSave(r.question)}
                       aria-label="Save question"
-                      className="shrink-0 text-slate hover:text-amber"
+                      className="shrink-0 text-slate hover:text-amber press-effect"
                     >
-                      <Star size={15} fill={savedIds.has(r.question.id) ? "currentColor" : "none"} className={savedIds.has(r.question.id) ? "text-amber" : ""} />
+                      <Star size={16} fill={savedIds.has(r.question.id) ? "currentColor" : "none"} className={savedIds.has(r.question.id) ? "text-amber" : ""} />
                     </button>
                   )}
                 </div>
@@ -138,7 +178,7 @@ export default function QuizPlayer({ quiz, onFinish, savedIds = new Set(), onTog
                 <p className="text-xs text-moss flex items-center gap-1.5 mb-2">
                   <CheckCircle2 size={13} /> Correct answer: {r.question.correctAnswer}
                 </p>
-                {r.question.explanation && <p className="text-xs text-slate italic">{r.question.explanation}</p>}
+                {r.question.explanation && <p className="text-xs text-slate italic bg-ink/[0.03] rounded-2xl px-3 py-2">{r.question.explanation}</p>}
               </Card>
             ))}
             <Button variant="ghost" onClick={() => setReviewOnly(false)}>
@@ -156,25 +196,27 @@ export default function QuizPlayer({ quiz, onFinish, savedIds = new Set(), onTog
               )}
             </div>
             {results.rows.map((r, i) => (
-              <Card key={r.question.id} className={`p-4 border-l-2 ${r.correct ? "border-l-moss" : "border-l-rose"}`}>
+              <Card key={r.question.id} className={`p-4 border-l-4 ${r.correct ? "border-l-moss" : "border-l-rose"}`}>
                 <div className="flex items-start justify-between gap-2">
-                  <p className="text-xs text-slate mb-1">Question {i + 1}</p>
+                  <span className="w-6 h-6 rounded-full bg-ink/[0.05] text-slate text-xs font-semibold flex items-center justify-center shrink-0 mb-1">
+                    {i + 1}
+                  </span>
                   {onToggleSave && (
                     <button
                       onClick={() => onToggleSave(r.question)}
                       aria-label="Save question"
-                      className="shrink-0 text-slate hover:text-amber"
+                      className="shrink-0 text-slate hover:text-amber press-effect"
                     >
                       <Star size={14} fill={savedIds.has(r.question.id) ? "currentColor" : "none"} className={savedIds.has(r.question.id) ? "text-amber" : ""} />
                     </button>
                   )}
                 </div>
-                <p className="text-sm text-ink mb-2">{r.question.prompt}</p>
+                <p className="text-sm text-ink mb-2 mt-1">{r.question.prompt}</p>
                 <div className="flex items-center gap-1.5 text-xs">
                   {r.correct ? (
-                    <span className="flex items-center gap-1 text-moss"><CheckCircle2 size={13} /> Correct</span>
+                    <Badge tone="moss" icon={CheckCircle2}>Correct</Badge>
                   ) : (
-                    <span className="flex items-center gap-1 text-rose"><XCircle size={13} /> Incorrect — correct answer: {r.question.correctAnswer}</span>
+                    <Badge tone="rose" icon={XCircle}>Incorrect — correct answer: {r.question.correctAnswer}</Badge>
                   )}
                 </div>
               </Card>
@@ -191,44 +233,55 @@ export default function QuizPlayer({ quiz, onFinish, savedIds = new Set(), onTog
   return (
     <div className="max-w-2xl mx-auto">
       <div className="flex items-center justify-between mb-4">
-        <p className="text-xs text-slate">
-          Question {index + 1} of {total}
-        </p>
+        <QuestionDots total={total} current={index} states={dotStates} />
         {timerOn && (
-          <span className="flex items-center gap-1.5 text-xs text-slate font-mono">
+          <span className="flex items-center gap-1.5 text-xs text-slate font-mono bg-ink/[0.05] rounded-full px-2.5 py-1">
             <Clock size={13} /> {fmtTime(seconds)}
           </span>
         )}
       </div>
       <ProgressBar value={index + 1} max={total} tone="teal" />
 
-      <Card className="p-6 mt-5">
-        <p className="text-xs text-teal-deep font-medium mb-2 uppercase tracking-wide">
-          {{ mcq: "Multiple choice", truefalse: "True or false", fillblank: "Fill in the blank", shortanswer: "Short answer" }[q.type]}
-        </p>
-        <p className="text-base text-ink mb-5 leading-relaxed">{q.prompt}</p>
+      <Card key={q.id} className="p-6 sm:p-7 mt-5 animate-pop-in">
+        <div className="flex items-center gap-2.5 mb-4">
+          <span className="w-7 h-7 rounded-full bg-teal/10 text-teal-deep text-xs font-bold flex items-center justify-center shrink-0">
+            {index + 1}
+          </span>
+          <Badge tone="slate">{TYPE_LABEL[q.type]}</Badge>
+        </div>
+        <p className="text-base sm:text-lg text-ink font-medium mb-6 leading-relaxed">{q.prompt}</p>
 
         {(q.type === "mcq" || q.type === "truefalse") && (
-          <div className="space-y-2">
-            {q.choices.map((choice) => {
+          <div className="space-y-2.5">
+            {q.choices.map((choice, i) => {
               const active = answered === choice;
               const correct = showFeedbackNow && choice === q.correctAnswer;
               const wrong = showFeedbackNow && active && choice !== q.correctAnswer;
+              const letter = String.fromCharCode(65 + i);
               return (
                 <button
                   key={choice}
                   onClick={() => setAnswer(choice)}
-                  className={`w-full text-left text-sm rounded-md border px-4 py-3 transition-colors ${
+                  className={`press-effect w-full text-left text-sm rounded-2xl border-2 px-4 py-3.5 transition-all duration-150 flex items-center gap-3 ${
                     correct
                       ? "border-moss bg-moss/[0.08] text-ink"
                       : wrong
                       ? "border-rose bg-rose/[0.08] text-ink"
                       : active
-                      ? "border-teal bg-teal/[0.07] text-teal-deep font-medium"
-                      : "border-line hover:border-line-strong text-ink"
+                      ? "border-teal bg-teal/[0.07] text-teal-deep font-semibold shadow-[var(--shadow-soft)]"
+                      : "border-line hover:border-line-strong text-ink hover:bg-ink/[0.02]"
                   }`}
                 >
-                  {choice}
+                  <span
+                    className={`w-6 h-6 rounded-2xl flex items-center justify-center text-xs font-bold shrink-0 ${
+                      correct ? "bg-moss text-white" : wrong ? "bg-rose text-white" : active ? "bg-teal text-white" : "bg-ink/[0.06] text-slate"
+                    }`}
+                  >
+                    {letter}
+                  </span>
+                  <span className="flex-1">{choice}</span>
+                  {correct && <CheckCircle2 size={17} className="text-moss shrink-0" />}
+                  {wrong && <XCircle size={17} className="text-rose shrink-0" />}
                 </button>
               );
             })}
@@ -240,7 +293,7 @@ export default function QuizPlayer({ quiz, onFinish, savedIds = new Set(), onTog
             value={answered || ""}
             onChange={(e) => setAnswer(e.target.value)}
             placeholder="Type the missing word or phrase"
-            className="w-full rounded-md border border-line px-4 py-3 text-sm focus:border-teal"
+            className="w-full rounded-2xl border-2 border-line px-4 py-3.5 text-sm focus:border-teal transition-colors"
           />
         )}
 
@@ -250,7 +303,7 @@ export default function QuizPlayer({ quiz, onFinish, savedIds = new Set(), onTog
             onChange={(e) => setAnswer(e.target.value)}
             rows={4}
             placeholder="Answer in your own words"
-            className="w-full rounded-md border border-line px-4 py-3 text-sm focus:border-teal resize-none"
+            className="w-full rounded-2xl border-2 border-line px-4 py-3.5 text-sm focus:border-teal resize-none transition-colors"
           />
         )}
 
@@ -268,7 +321,7 @@ export default function QuizPlayer({ quiz, onFinish, savedIds = new Set(), onTog
             Next
           </Button>
         ) : (
-          <Button icon={RotateCcw} onClick={submit}>
+          <Button icon={RotateCcw} variant="success" onClick={submit}>
             Submit quiz
           </Button>
         )}

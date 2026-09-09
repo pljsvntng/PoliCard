@@ -109,7 +109,7 @@ export default function Upload() {
             )}
 
             {status === "error" && (
-              <div className="mt-4 flex items-start gap-2 text-sm text-rose bg-rose/[0.06] border border-rose/20 rounded-md p-3">
+              <div className="mt-4 flex items-start gap-2 text-sm text-rose bg-rose/[0.06] border border-rose/20 rounded-xl p-3">
                 <AlertCircle size={16} className="shrink-0 mt-0.5" />
                 <span>{error}</span>
               </div>
@@ -125,7 +125,7 @@ export default function Upload() {
 
                 <div>
                   <p className="text-xs text-slate mb-1.5">Text preview</p>
-                  <div className="text-sm text-ink/80 bg-ink/[0.03] rounded-md p-3 max-h-28 overflow-y-auto thin-scroll leading-relaxed">
+                  <div className="text-sm text-ink/80 bg-ink/[0.03] rounded-xl p-3 max-h-28 overflow-y-auto thin-scroll leading-relaxed">
                     {result.text.slice(0, 400)}…
                   </div>
                 </div>
@@ -138,7 +138,7 @@ export default function Upload() {
                     {result.chunks.map((c) => (
                       <label
                         key={c.id}
-                        className="flex items-start gap-2.5 text-sm p-2 rounded-md hover:bg-ink/[0.03] cursor-pointer"
+                        className="flex items-start gap-2.5 text-sm p-2 rounded-xl hover:bg-ink/[0.03] cursor-pointer"
                       >
                         <input
                           type="checkbox"

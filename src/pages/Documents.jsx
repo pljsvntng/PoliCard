@@ -49,7 +49,7 @@ export default function Documents() {
               const quizCount = quizzes.filter((q) => q.documentId === doc.id).length;
               const setCount = flashcardSets.filter((f) => f.documentId === doc.id).length;
               return (
-                <Card key={doc.id} className="p-5 flex flex-col">
+                <Card key={doc.id} interactive className="p-5 flex flex-col">
                   <div className="flex items-start gap-3 mb-3">
                     <FileText size={20} className="text-teal shrink-0 mt-0.5" />
                     <div className="min-w-0">

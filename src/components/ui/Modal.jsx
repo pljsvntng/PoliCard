@@ -18,9 +18,9 @@ export default function Modal({ open, onClose, title, children, width = "max-w-l
         role="dialog"
         aria-modal="true"
         aria-label={title}
-        className={`relative z-10 w-full ${width} max-h-[85vh] overflow-y-auto thin-scroll bg-paper rounded-lg border border-line shadow-[0_12px_40px_rgba(23,32,58,0.18)]`}
+        className={`relative z-10 w-full ${width} max-h-[85vh] overflow-y-auto thin-scroll bg-paper rounded-3xl border border-line shadow-[var(--shadow-pop)] animate-pop-in`}
       >
-        <div className="flex items-center justify-between px-6 py-4 border-b border-line sticky top-0 bg-paper">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-line sticky top-0 bg-paper rounded-t-3xl">
           <h2 className="font-display text-lg text-ink">{title}</h2>
           <button onClick={onClose} aria-label="Close" className="text-slate hover:text-ink">
             <X size={18} />

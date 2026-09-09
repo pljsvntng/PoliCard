@@ -60,8 +60,8 @@ export default function GenerateForm({ document, onCreated }) {
             <button
               key={t}
               onClick={() => setType(t)}
-              className={`text-sm rounded-md border px-3 py-2 text-left transition-colors ${
-                type === t ? "border-teal bg-teal/[0.07] text-teal-deep font-medium" : "border-line text-ink hover:border-line-strong"
+              className={`press-effect text-sm rounded-xl border-2 px-3 py-2.5 text-left font-medium transition-all duration-150 ${
+                type === t ? "border-teal bg-teal/[0.08] text-teal-deep shadow-[var(--shadow-soft)]" : "border-line text-ink hover:border-line-strong hover:bg-ink/[0.02]"
               }`}
             >
               {QUESTION_TYPE_LABELS[t]}
@@ -76,7 +76,7 @@ export default function GenerateForm({ document, onCreated }) {
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           placeholder={`${document.name.replace(/\.[^.]+$/, "")} — ${QUESTION_TYPE_LABELS[type]}`}
-          className="w-full rounded-md border border-line px-3 py-2 text-sm bg-paper focus:border-teal"
+          className="w-full rounded-xl border-2 border-line px-3.5 py-2.5 text-sm bg-paper focus:border-teal transition-colors"
         />
       </div>
 
@@ -89,7 +89,7 @@ export default function GenerateForm({ document, onCreated }) {
             max={30}
             value={count}
             onChange={(e) => setCount(e.target.value)}
-            className="w-full rounded-md border border-line px-3 py-2 text-sm bg-paper focus:border-teal"
+            className="w-full rounded-xl border-2 border-line px-3.5 py-2.5 text-sm bg-paper focus:border-teal transition-colors"
           />
         </div>
         <div>
@@ -97,7 +97,7 @@ export default function GenerateForm({ document, onCreated }) {
           <select
             value={difficulty}
             onChange={(e) => setDifficulty(e.target.value)}
-            className="w-full rounded-md border border-line px-3 py-2 text-sm bg-paper focus:border-teal"
+            className="w-full rounded-xl border-2 border-line px-3.5 py-2.5 text-sm bg-paper focus:border-teal transition-colors"
           >
             {DIFFICULTIES.map((d) => (
               <option key={d}>{d}</option>
@@ -111,7 +111,7 @@ export default function GenerateForm({ document, onCreated }) {
         <select
           value={chunkId}
           onChange={(e) => setChunkId(e.target.value)}
-          className="w-full rounded-md border border-line px-3 py-2 text-sm bg-paper focus:border-teal"
+          className="w-full rounded-xl border-2 border-line px-3.5 py-2.5 text-sm bg-paper focus:border-teal transition-colors"
         >
           <option value="all">Whole document</option>
           {document.chunks.map((c) => (
@@ -135,7 +135,7 @@ export default function GenerateForm({ document, onCreated }) {
         </div>
       )}
 
-      {error && <p className="text-sm text-rose bg-rose/[0.06] border border-rose/20 rounded-md p-3">{error}</p>}
+      {error && <p className="text-sm text-rose bg-rose/[0.06] border border-rose/20 rounded-xl p-3">{error}</p>}
 
       <Button onClick={handleGenerate} disabled={busy} icon={busy ? undefined : Sparkles} className="w-full">
         {busy ? (

@@ -32,7 +32,7 @@ export default function Flashcards() {
               const doc = documents.find((d) => d.id === set.documentId);
               const mastered = set.cards.filter((c) => c.status === "mastered").length;
               return (
-                <Card key={set.id} className="p-5 flex flex-col">
+                <Card key={set.id} interactive className="p-5 flex flex-col">
                   <h3 className="text-sm text-ink font-medium mb-1 leading-snug">{set.title}</h3>
                   <p className="text-xs text-slate mb-4">{doc?.name || "Source document deleted"}</p>
                   <ProgressBar value={mastered} max={set.cards.length} tone="amber" label={`${set.cards.length} cards`} />

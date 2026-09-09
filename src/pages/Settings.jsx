@@ -26,7 +26,7 @@ export default function Settings() {
             <input
               value={settings.name}
               onChange={(e) => setSettings((s) => ({ ...s, name: e.target.value }))}
-              className="w-full rounded-md border border-line px-3 py-2 text-sm bg-paper focus:border-teal"
+              className="w-full rounded-xl border-2 border-line px-3.5 py-2.5 text-sm bg-paper focus:border-teal transition-colors"
             />
           </div>
           <div>
@@ -37,7 +37,7 @@ export default function Settings() {
               max={180}
               value={settings.dailyGoalMinutes}
               onChange={(e) => setSettings((s) => ({ ...s, dailyGoalMinutes: Number(e.target.value) }))}
-              className="w-full rounded-md border border-line px-3 py-2 text-sm bg-paper focus:border-teal"
+              className="w-full rounded-xl border-2 border-line px-3.5 py-2.5 text-sm bg-paper focus:border-teal transition-colors"
             />
           </div>
           <label className="flex items-center gap-2.5 text-sm text-ink cursor-pointer">

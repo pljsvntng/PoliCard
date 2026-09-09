@@ -32,7 +32,7 @@ export default function Quiz() {
               const lastAttempt = q.attempts?.[0];
               const doc = documents.find((d) => d.id === q.documentId);
               return (
-                <Card key={q.id} className="p-5 flex flex-col">
+                <Card key={q.id} interactive className="p-5 flex flex-col">
                   <p className="text-xs text-teal-deep font-medium mb-1">{QUESTION_TYPE_LABELS[q.type]}</p>
                   <h3 className="text-sm text-ink font-medium mb-1 leading-snug">{q.title}</h3>
                   <p className="text-xs text-slate mb-4">{doc?.name || "Source document deleted"}</p>

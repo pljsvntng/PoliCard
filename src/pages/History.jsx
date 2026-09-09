@@ -42,7 +42,7 @@ export default function History() {
                 <p className="text-xs text-slate mb-3 font-mono">{day}</p>
                 <div className="space-y-2">
                   {items.map((h) => (
-                    <Card key={h.id} className="p-4 flex items-center gap-3">
+                    <Card key={h.id} interactive className="p-4 flex items-center gap-3">
                       {h.type === "quiz" ? (
                         <BrainCircuit size={17} className="text-teal shrink-0" />
                       ) : (

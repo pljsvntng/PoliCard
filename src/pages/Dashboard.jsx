@@ -1,5 +1,5 @@
 import { useOutletContext, Link } from "react-router-dom";
-import { UploadCloud, BrainCircuit, Layers, FileText, Clock, ArrowRight } from "lucide-react";
+import { UploadCloud, BrainCircuit, Layers, FileText, Target, ArrowRight, Sparkles } from "lucide-react";
 import Topbar from "../components/layout/Topbar";
 import Card from "../components/ui/Card";
 import Button from "../components/ui/Button";
@@ -33,10 +33,10 @@ export default function Dashboard() {
   const totalCards = flashcardSets.flatMap((f) => f.cards).length;
 
   const stats = [
-    { label: "Documents uploaded", value: documents.length, icon: FileText },
-    { label: "Quizzes taken", value: totalAttempts.length, icon: BrainCircuit },
-    { label: "Average score", value: avgScore !== null ? `${avgScore}%` : "—", icon: Clock },
-    { label: "Flashcards reviewed", value: `${cardsReviewed}/${totalCards || 0}`, icon: Layers },
+    { label: "Documents uploaded", value: documents.length, icon: FileText, tone: "teal" },
+    { label: "Quizzes taken", value: totalAttempts.length, icon: BrainCircuit, tone: "amber" },
+    { label: "Average score", value: avgScore !== null ? `${avgScore}%` : "—", icon: Target, tone: "moss" },
+    { label: "Flashcards reviewed", value: `${cardsReviewed}/${totalCards || 0}`, icon: Layers, tone: "rose" },
   ];
 
   return (
@@ -54,23 +54,29 @@ export default function Dashboard() {
 
       <div className="p-6 sm:p-8 max-w-6xl mx-auto space-y-8">
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-          {stats.map(({ label, value, icon: Icon }) => (
-            <Card key={label} className="p-4">
-              <Icon size={16} className="text-teal mb-3" />
-              <div className="font-display text-2xl text-ink">{value}</div>
+          {stats.map(({ label, value, icon: Icon, tone }) => (
+            <Card key={label} interactive className="p-4 sm:p-5">
+              <div
+                className={`w-9 h-9 rounded-xl flex items-center justify-center mb-3 ${
+                  { teal: "bg-teal/10 text-teal-deep", amber: "bg-amber/12 text-[#a25f00]", moss: "bg-moss/10 text-[#0f7a4c]", rose: "bg-rose/10 text-[#c8283a]" }[tone]
+                }`}
+              >
+                <Icon size={17} />
+              </div>
+              <div className="font-display font-semibold text-2xl text-ink">{value}</div>
               <div className="text-xs text-slate mt-1">{label}</div>
             </Card>
           ))}
         </div>
 
         <div className="grid gap-3 sm:grid-cols-3">
-          <Button as={Link} to="/upload" variant="secondary" className="justify-between" icon={UploadCloud}>
+          <Button as={Link} to="/upload" variant="secondary" className="justify-start" icon={UploadCloud}>
             Upload document
           </Button>
-          <Button as={Link} to="/quiz" variant="secondary" className="justify-between" icon={BrainCircuit}>
+          <Button as={Link} to="/quiz" variant="secondary" className="justify-start" icon={BrainCircuit}>
             Create quiz
           </Button>
-          <Button as={Link} to="/flashcards" variant="secondary" className="justify-between" icon={Layers}>
+          <Button as={Link} to="/flashcards" variant="secondary" className="justify-start" icon={Layers}>
             Create flashcards
           </Button>
         </div>
@@ -78,7 +84,7 @@ export default function Dashboard() {
         <div className="grid lg:grid-cols-2 gap-6">
           <section>
             <div className="flex items-center justify-between mb-3">
-              <h2 className="font-display text-base text-ink">Recent documents</h2>
+              <h2 className="font-display font-semibold text-base text-ink flex items-center gap-1.5"><Sparkles size={14} className="text-amber" /> Recent documents</h2>
               <Link to="/documents" className="text-xs text-teal-deep hover:underline flex items-center gap-1">
                 View all <ArrowRight size={12} />
               </Link>
@@ -93,7 +99,7 @@ export default function Dashboard() {
             ) : (
               <div className="space-y-2">
                 {documents.slice(0, 4).map((doc) => (
-                  <Card key={doc.id} className="p-4 flex items-center gap-3">
+                  <Card key={doc.id} interactive className="p-4 flex items-center gap-3">
                     <FileText size={18} className="text-teal shrink-0" />
                     <div className="flex-1 min-w-0">
                       <p className="text-sm text-ink truncate">{doc.name}</p>
@@ -112,7 +118,7 @@ export default function Dashboard() {
 
           <section>
             <div className="flex items-center justify-between mb-3">
-              <h2 className="font-display text-base text-ink">Your study sets</h2>
+              <h2 className="font-display font-semibold text-base text-ink flex items-center gap-1.5"><Sparkles size={14} className="text-amber" /> Your study sets</h2>
               <Link to="/library" className="text-xs text-teal-deep hover:underline flex items-center gap-1">
                 View library <ArrowRight size={12} />
               </Link>
@@ -126,7 +132,7 @@ export default function Dashboard() {
             ) : (
               <div className="space-y-2">
                 {quizzes.slice(0, 2).map((q) => (
-                  <Card key={q.id} className="p-4">
+                  <Card key={q.id} interactive className="p-4">
                     <div className="flex items-center justify-between mb-2">
                       <p className="text-sm text-ink">{q.title}</p>
                       <Link to={`/quiz/${q.id}`} className="text-xs text-teal-deep hover:underline">
@@ -144,7 +150,7 @@ export default function Dashboard() {
                 {flashcardSets.slice(0, 2).map((f) => {
                   const mastered = f.cards.filter((c) => c.status === "mastered").length;
                   return (
-                    <Card key={f.id} className="p-4">
+                    <Card key={f.id} interactive className="p-4">
                       <div className="flex items-center justify-between mb-2">
                         <p className="text-sm text-ink">{f.title}</p>
                         <Link to={`/flashcards/${f.id}`} className="text-xs text-teal-deep hover:underline">

@@ -41,7 +41,7 @@ export function ToastProvider({ children }) {
             <div
               key={t.id}
               role="status"
-              className={`flex items-start gap-2.5 rounded-md border bg-paper px-4 py-3 shadow-[0_4px_16px_rgba(23,32,58,0.08)] ${TONE[t.tone]}`}
+              className={`flex items-start gap-2.5 rounded-xl border bg-paper px-4 py-3 shadow-[0_4px_16px_rgba(23,32,58,0.08)] ${TONE[t.tone]}`}
             >
               <Icon size={18} className="mt-0.5 shrink-0" />
               <p className="text-sm text-ink flex-1">{t.message}</p>

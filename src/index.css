@@ -1,22 +1,29 @@
 @import "tailwindcss";
 
 @theme {
-  --font-display: "Lora", serif;
+  --font-display: "Fredoka", "Inter", system-ui, sans-serif;
   --font-sans: "Inter", system-ui, sans-serif;
   --font-mono: "IBM Plex Mono", monospace;
 
-  --color-ink: #17203a;
-  --color-ink-soft: #2c3450;
-  --color-parchment: #f6f3ec;
-  --color-paper: #fffdf9;
-  --color-teal: #2f6f68;
-  --color-teal-deep: #234f4a;
-  --color-amber: #d98e2b;
-  --color-rose: #b8483f;
-  --color-moss: #4b7a51;
-  --color-slate: #5b6270;
-  --color-line: #ddd6c8;
-  --color-line-strong: #c8bfa9;
+  /* Core palette — kept the same variable names as before so every
+     component that already references them (bg-teal, text-amber, etc.)
+     picks up the new game-inspired palette automatically. */
+  --color-ink: #201d45;
+  --color-ink-soft: #35316b;
+  --color-parchment: #f3f4fc;   /* app background */
+  --color-paper: #ffffff;       /* card / surface background */
+  --color-teal: #5b57f0;        /* primary (was teal, now indigo-violet) */
+  --color-teal-deep: #443fd6;   /* primary hover/active */
+  --color-amber: #ffab1f;       /* accent / xp-gold */
+  --color-rose: #ff5d6c;        /* danger / incorrect */
+  --color-moss: #22c07a;        /* success / correct */
+  --color-slate: #6b6f95;       /* secondary text */
+  --color-line: #e8e8f7;        /* hairline border */
+  --color-line-strong: #cfd0ee; /* stronger border */
+
+  --shadow-soft: 0 1px 2px rgba(32, 29, 69, 0.04), 0 6px 16px rgba(32, 29, 69, 0.05);
+  --shadow-lift: 0 4px 10px rgba(32, 29, 69, 0.06), 0 14px 28px rgba(91, 87, 240, 0.10);
+  --shadow-pop: 0 10px 30px rgba(91, 87, 240, 0.22);
 }
 
 * {
@@ -29,18 +36,27 @@ html, body, #root {
 
 body {
   background-color: var(--color-parchment);
+  background-image:
+    radial-gradient(circle at 10% 0%, rgba(91, 87, 240, 0.06), transparent 40%),
+    radial-gradient(circle at 90% 10%, rgba(255, 171, 31, 0.05), transparent 35%);
+  background-attachment: fixed;
   color: var(--color-ink);
   font-family: var(--font-sans);
 }
 
+.font-display {
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
 ::selection {
-  background-color: #d98e2b33;
+  background-color: #5b57f033;
 }
 
 :focus-visible {
   outline: 2px solid var(--color-teal);
   outline-offset: 2px;
-  border-radius: 2px;
+  border-radius: 4px;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -53,10 +69,11 @@ body {
 
 .thin-scroll::-webkit-scrollbar { width: 8px; height: 8px; }
 .thin-scroll::-webkit-scrollbar-track { background: transparent; }
-.thin-scroll::-webkit-scrollbar-thumb { background: var(--color-line-strong); border-radius: 4px; }
+.thin-scroll::-webkit-scrollbar-thumb { background: var(--color-line-strong); border-radius: 999px; }
 
+/* ---------- Flashcards ---------- */
 .card-flip-inner {
-  transition: transform 0.5s;
+  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
   transform-style: preserve-3d;
 }
 .card-flip-face {
@@ -64,4 +81,64 @@ body {
 }
 .card-flip-back {
   transform: rotateY(180deg);
+}
+
+/* ---------- Shared motion ---------- */
+@keyframes pop-in {
+  0% { opacity: 0; transform: scale(0.94) translateY(6px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+.animate-pop-in {
+  animation: pop-in 0.28s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes page-in {
+  0% { opacity: 0; transform: translateY(8px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+.animate-page-in {
+  animation: page-in 0.32s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes celebrate-ring {
+  0% { transform: scale(0.85); opacity: 0; }
+  60% { opacity: 1; }
+  100% { transform: scale(1.4); opacity: 0; }
+}
+.animate-celebrate-ring {
+  animation: celebrate-ring 1.1s ease-out infinite;
+}
+
+@keyframes bounce-in {
+  0% { opacity: 0; transform: scale(0.7); }
+  60% { opacity: 1; transform: scale(1.08); }
+  100% { transform: scale(1); }
+}
+.animate-bounce-in {
+  animation: bounce-in 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+@keyframes shake {
+  10%, 90% { transform: translateX(-1px); }
+  20%, 80% { transform: translateX(2px); }
+  30%, 50%, 70% { transform: translateX(-4px); }
+  40%, 60% { transform: translateX(4px); }
+}
+.animate-shake {
+  animation: shake 0.4s ease-in-out;
+}
+
+.press-effect {
+  transition: transform 0.12s ease, box-shadow 0.12s ease, filter 0.12s ease;
+}
+.press-effect:active {
+  transform: scale(0.96);
+}
+
+.lift-on-hover {
+  transition: transform 0.18s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.18s ease, border-color 0.18s ease;
+}
+.lift-on-hover:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-lift);
 }

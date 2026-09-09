@@ -29,8 +29,8 @@ export default function Dropzone({ onFile }) {
       role="button"
       tabIndex={0}
       onKeyDown={(e) => e.key === "Enter" && inputRef.current?.click()}
-      className={`cursor-pointer rounded-lg border-2 border-dashed transition-colors p-10 text-center ${
-        dragOver ? "border-teal bg-teal/[0.05]" : "border-line-strong hover:border-teal/50"
+      className={`cursor-pointer rounded-3xl border-2 border-dashed transition-all duration-200 p-10 sm:p-14 text-center ${
+        dragOver ? "border-teal bg-teal/[0.06] scale-[1.01] shadow-[var(--shadow-lift)]" : "border-line-strong hover:border-teal/50 hover:bg-teal/[0.02]"
       }`}
     >
       <input
@@ -40,10 +40,10 @@ export default function Dropzone({ onFile }) {
         className="hidden"
         onChange={(e) => handleFiles(e.target.files)}
       />
-      <div className="w-12 h-12 mx-auto rounded-full bg-teal/[0.08] flex items-center justify-center text-teal mb-4">
-        <UploadCloud size={22} />
+      <div className={`w-14 h-14 mx-auto rounded-2xl bg-gradient-to-br from-teal/15 to-[#7d79ff]/15 flex items-center justify-center text-teal-deep mb-4 transition-transform duration-200 ${dragOver ? "scale-110" : ""}`}>
+        <UploadCloud size={24} />
       </div>
-      <p className="text-ink font-medium mb-1">Drag and drop a file, or click to browse</p>
+      <p className="text-ink font-semibold mb-1">Drag and drop a file, or click to browse</p>
       <p className="text-sm text-slate">
         Supports {SUPPORTED_TYPES.join(", ")} — up to 25 MB
       </p>

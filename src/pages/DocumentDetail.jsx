@@ -63,7 +63,7 @@ export default function DocumentDetail() {
               Generate
             </Button>
           </div>
-          <div className="text-sm text-ink/80 bg-ink/[0.03] rounded-md p-3 max-h-32 overflow-y-auto thin-scroll leading-relaxed">
+          <div className="text-sm text-ink/80 bg-ink/[0.03] rounded-xl p-3 max-h-32 overflow-y-auto thin-scroll leading-relaxed">
             {document.text.slice(0, 600)}…
           </div>
         </Card>
@@ -75,7 +75,7 @@ export default function DocumentDetail() {
           ) : (
             <div className="grid sm:grid-cols-2 gap-3">
               {docQuizzes.map((q) => (
-                <Card key={q.id} className="p-4 flex items-center gap-3">
+                <Card key={q.id} interactive className="p-4 flex items-center gap-3">
                   <BrainCircuit size={17} className="text-teal shrink-0" />
                   <div className="flex-1 min-w-0">
                     <p className="text-sm text-ink truncate">{q.title}</p>
@@ -97,7 +97,7 @@ export default function DocumentDetail() {
           ) : (
             <div className="grid sm:grid-cols-2 gap-3">
               {docSets.map((f) => (
-                <Card key={f.id} className="p-4 flex items-center gap-3">
+                <Card key={f.id} interactive className="p-4 flex items-center gap-3">
                   <Layers size={17} className="text-amber shrink-0" />
                   <div className="flex-1 min-w-0">
                     <p className="text-sm text-ink truncate">{f.title}</p>

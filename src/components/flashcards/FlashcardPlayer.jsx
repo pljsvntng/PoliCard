@@ -1,12 +1,12 @@
 import { useMemo, useState } from "react";
-import { Shuffle, ChevronLeft, ChevronRight, RotateCw } from "lucide-react";
+import { Shuffle, ChevronLeft, ChevronRight, RotateCw, Frown, Smile, Trophy } from "lucide-react";
 import Button from "../ui/Button";
 import ProgressBar from "../ui/ProgressBar";
 
 const STATUS_STYLES = {
-  easy: "bg-moss/10 text-moss border-moss/30",
-  review: "bg-rose/10 text-rose border-rose/30",
-  mastered: "bg-teal/10 text-teal-deep border-teal/30",
+  easy: "bg-amber/12 text-[#a25f00] border-amber/25",
+  review: "bg-rose/10 text-[#c8283a] border-rose/25",
+  mastered: "bg-moss/10 text-[#0f7a4c] border-moss/25",
   new: "bg-ink/5 text-slate border-line",
 };
 
@@ -48,6 +48,9 @@ export default function FlashcardPlayer({ set, onMark }) {
   if (pool.length === 0) {
     return (
       <div className="max-w-lg mx-auto text-center py-16">
+        <div className="w-12 h-12 rounded-2xl bg-moss/10 text-moss flex items-center justify-center mx-auto mb-4">
+          <Trophy size={20} />
+        </div>
         <p className="text-sm text-slate mb-4">
           {mode === "review" ? "Nothing marked \u201cNeed review\u201d right now." : "This set has no cards."}
         </p>
@@ -63,7 +66,7 @@ export default function FlashcardPlayer({ set, onMark }) {
   return (
     <div className="max-w-lg mx-auto">
       <div className="flex items-center justify-between mb-4">
-        <div className="flex gap-2">
+        <div className="flex gap-2 bg-ink/[0.04] p-1 rounded-xl">
           {["study", "review"].map((m) => (
             <button
               key={m}
@@ -72,37 +75,37 @@ export default function FlashcardPlayer({ set, onMark }) {
                 setIndex(0);
                 setFlipped(false);
               }}
-              className={`text-xs rounded-md px-3 py-1.5 border ${
-                mode === m ? "border-teal bg-teal/[0.07] text-teal-deep font-medium" : "border-line text-slate"
+              className={`press-effect text-xs rounded-2xl px-3 py-1.5 font-medium transition-colors ${
+                mode === m ? "bg-paper text-teal-deep shadow-[var(--shadow-soft)]" : "text-slate hover:text-ink"
               }`}
             >
               {m === "study" ? "Study mode" : "Review mode"}
             </button>
           ))}
         </div>
-        <button onClick={shuffleCards} className="text-xs text-slate flex items-center gap-1.5 hover:text-ink">
+        <button onClick={shuffleCards} className="press-effect text-xs text-slate flex items-center gap-1.5 hover:text-ink bg-ink/[0.04] rounded-2xl px-3 py-1.5">
           <Shuffle size={13} /> Shuffle
         </button>
       </div>
 
       <ProgressBar value={index + 1} max={pool.length} tone="amber" label={`Card ${index + 1} of ${pool.length}`} />
 
-      <div className="mt-5 perspective-distant">
+      <div className="mt-5 [perspective:1200px]">
         <div
           onClick={() => setFlipped((f) => !f)}
-          className="relative h-64 cursor-pointer card-flip-inner"
+          className="relative h-64 sm:h-72 cursor-pointer card-flip-inner"
           style={{ transform: flipped ? "rotateY(180deg)" : "none" }}
         >
-          <div className="card-flip-face absolute inset-0 rounded-lg border border-line bg-paper flex flex-col items-center justify-center p-8 text-center">
-            <span className="text-xs text-slate mb-3">Term</span>
-            <p className="font-display text-xl text-ink leading-snug">{card.front}</p>
+          <div className="card-flip-face absolute inset-0 rounded-3xl border-2 border-line bg-paper shadow-[var(--shadow-lift)] flex flex-col items-center justify-center p-8 text-center">
+            <span className="text-xs font-semibold text-teal-deep bg-teal/10 rounded-full px-3 py-1 mb-4">Term</span>
+            <p className="font-display text-xl sm:text-2xl text-ink leading-snug">{card.front}</p>
             <span className="text-xs text-slate/70 mt-6 flex items-center gap-1.5">
               <RotateCw size={12} /> Tap to flip
             </span>
           </div>
-          <div className="card-flip-face card-flip-back absolute inset-0 rounded-lg border border-teal/30 bg-teal/4 flex flex-col items-center justify-center p-8 text-center">
-            <span className="text-xs text-teal-deep mb-3">Definition</span>
-            <p className="text-sm text-ink leading-relaxed">{card.back}</p>
+          <div className="card-flip-face card-flip-back absolute inset-0 rounded-3xl border-2 border-teal/30 bg-gradient-to-br from-teal/[0.06] to-[#7d79ff]/[0.06] shadow-[var(--shadow-lift)] flex flex-col items-center justify-center p-8 text-center">
+            <span className="text-xs font-semibold text-teal-deep bg-paper rounded-full px-3 py-1 mb-4 shadow-[var(--shadow-soft)]">Definition</span>
+            <p className="text-sm sm:text-base text-ink leading-relaxed">{card.back}</p>
           </div>
         </div>
       </div>
@@ -111,7 +114,7 @@ export default function FlashcardPlayer({ set, onMark }) {
         <Button variant="ghost" icon={ChevronLeft} disabled={index === 0} onClick={() => go(-1)}>
           Prev
         </Button>
-        <span className={`text-xs rounded-full border px-2.5 py-1 capitalize ${STATUS_STYLES[card.status]}`}>
+        <span className={`text-xs font-semibold rounded-full border-2 px-3 py-1.5 capitalize ${STATUS_STYLES[card.status]}`}>
           {card.status === "new" ? "Not reviewed" : card.status}
         </span>
         <Button variant="ghost" iconRight={ChevronRight} disabled={index === pool.length - 1} onClick={() => go(1)}>
@@ -120,13 +123,27 @@ export default function FlashcardPlayer({ set, onMark }) {
       </div>
 
       <div className="grid grid-cols-3 gap-2 mt-4">
-        <Button variant="secondary" size="sm" onClick={() => mark("review")} className="border-rose/30 text-rose hover:bg-rose/6">
+        <Button
+          size="sm"
+          onClick={() => mark("review")}
+          icon={Frown}
+          className="bg-rose/10 text-[#c8283a] shadow-none hover:bg-rose/20 hover:shadow-none border-2 border-transparent"
+        >
           Need review
         </Button>
-        <Button variant="secondary" size="sm" onClick={() => mark("easy")} className="border-amber/40 text-amber hover:bg-amber/6">
+        <Button
+          size="sm"
+          onClick={() => mark("easy")}
+          className="bg-amber/12 text-[#a25f00] shadow-none hover:bg-amber/20 hover:shadow-none border-2 border-transparent"
+        >
           Easy
         </Button>
-        <Button variant="secondary" size="sm" onClick={() => mark("mastered")} className="border-moss/30 text-moss hover:bg-moss/6">
+        <Button
+          size="sm"
+          onClick={() => mark("mastered")}
+          icon={Smile}
+          className="bg-moss/10 text-[#0f7a4c] shadow-none hover:bg-moss/20 hover:shadow-none border-2 border-transparent"
+        >
           Mastered
         </Button>
       </div>
