@@ -5,7 +5,7 @@ const STEPS = [
   {
     icon: UploadCloud,
     title: "Upload what you're studying",
-    body: "A textbook chapter, a lecture PDF, your own notes. Marginal reads the text straight out of the file.",
+    body: "A textbook chapter, a lecture PDF, your own notes. PoliCard reads the text straight out of the file.",
     tone: "teal",
   },
   {
@@ -36,7 +36,7 @@ export default function Landing() {
           <span className="w-9 h-9 rounded-2xl bg-gradient-to-br from-teal to-[#7d79ff] flex items-center justify-center shadow-[var(--shadow-pop)]">
             <Sparkles size={17} className="text-white" />
           </span>
-          <span className="font-display text-xl">Marginal</span>
+          <span className="font-display text-xl">PoliCard</span>
         </div>
         <Link
           to="/dashboard"
@@ -55,7 +55,7 @@ export default function Landing() {
             Turn any document into a quiz you can actually learn from.
           </h1>
           <p className="text-base sm:text-lg text-slate max-w-xl mx-auto mb-9 leading-relaxed">
-            Upload a PDF, a Word doc, or your notes. Marginal builds questions and flashcards
+            Upload a PDF, a Word doc, or your notes. PoliCard builds questions and flashcards
             straight from what's on the page — nothing invented, nothing off-topic.
           </p>
           <Link

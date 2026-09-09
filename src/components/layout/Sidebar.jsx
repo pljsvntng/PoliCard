@@ -43,7 +43,7 @@ export default function Sidebar({ open, onClose }) {
             <span className="w-8 h-8 rounded-xl bg-gradient-to-br from-[#7d79ff] to-teal flex items-center justify-center shadow-[var(--shadow-pop)]">
               <Sparkles size={16} className="text-white" />
             </span>
-            <span className="font-display text-lg tracking-tight">Marginal</span>
+            <span className="font-display text-lg tracking-tight">PoliCard</span>
           </div>
           <button onClick={onClose} className="lg:hidden text-parchment/70" aria-label="Close menu">
             <X size={18} />

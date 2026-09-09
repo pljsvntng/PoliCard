@@ -1,4 +1,4 @@
-# Marginal — AI Study Platform
+# PoliCard — AI Study Platform
 
 Upload a document, generate quizzes and flashcards from its actual content, and study with an
 interactive quiz player and flip-card reviewer. Built with React, React Router, Tailwind CSS v4, and Vite.
